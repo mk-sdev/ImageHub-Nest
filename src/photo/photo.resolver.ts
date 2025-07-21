@@ -8,10 +8,10 @@ export class PhotoResolver {
   constructor(private readonly photoService: PhotoService) {}
 
   @Query(() => [Photo])
-  photos(
+  async photos(
     @Args('userId') userId: string,
     @Args('filter', { nullable: true }) filter?: TagFilterInput,
-  ): Photo[] {
+  ): Promise<Photo[]> {
     return this.photoService.filterPhotos(userId, filter);
   }
 }
