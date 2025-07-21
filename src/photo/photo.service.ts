@@ -24,4 +24,14 @@ export class PhotoService {
       tags: photo.tags,
     };
   }
+
+  async deletePhotos(ids: string[]): Promise<number> {
+    return this.repository.deleteManyByIds(ids);
+  }
+
+  async updateTagsForPhotos(
+    updates: { id: string; tags: string[] }[],
+  ): Promise<number> {
+    return this.repository.updateManyTags(updates);
+  }
 }

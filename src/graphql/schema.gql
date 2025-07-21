@@ -19,3 +19,13 @@ input TagFilterInput {
   not: TagFilterInput
   tag: String
 }
+
+type Mutation {
+  deletePhotos(ids: [String!]!): Int!
+  updateTagsForPhotos(input: [UpdatePhotoTagsInput!]!): Int!
+}
+
+input UpdatePhotoTagsInput {
+  id: String!
+  tags: [String!]!
+}
