@@ -1,10 +1,10 @@
-import { Resolver, Query, Args } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { Photo } from './photo.entity';
-import { PhotoService } from './photo.service';
 import { TagFilterInput } from './tag-filter.input';
+import { PhotoService } from 'src/photo/photo.service';
 
-@Resolver(() => Photo)
-export class PhotoResolver {
+@Resolver()
+export class GraphqlResolver {
   constructor(private readonly photoService: PhotoService) {}
 
   @Query(() => [Photo])
