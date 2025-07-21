@@ -10,5 +10,12 @@ type Photo {
 }
 
 type Query {
-  photos(userId: String!, tag: String): [Photo!]!
+  photos(userId: String!, filter: TagFilterInput): [Photo!]!
+}
+
+input TagFilterInput {
+  and: [TagFilterInput!]
+  or: [TagFilterInput!]
+  not: TagFilterInput
+  tag: String
 }
