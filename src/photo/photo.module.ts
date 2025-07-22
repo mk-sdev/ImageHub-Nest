@@ -3,6 +3,7 @@ import { RepositoryModule } from 'src/repository/repository.module';
 import { PhotoService } from './photo.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { PhotoController } from './photo.controller';
+import { PhotoGateway } from './photo.gateway';
 
 @Module({
   imports: [
@@ -19,8 +20,8 @@ import { PhotoController } from './photo.controller';
       },
     ]),
   ],
-  providers: [PhotoService],
-  exports: [PhotoService],
+  providers: [PhotoService, PhotoGateway],
+  exports: [PhotoService, PhotoGateway],
   controllers: [PhotoController],
 })
 export class PhotoModule {}

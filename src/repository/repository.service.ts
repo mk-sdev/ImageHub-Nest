@@ -48,17 +48,30 @@ export class RepositoryService {
   }
 
   // aktualizuje tagi w wielu rekordach
-  async updateManyTags(
-    updates: { id: string; tags: string[] }[],
-  ): Promise<number> {
-    const bulkOps = updates.map((item) => ({
-      updateOne: {
-        filter: { _id: item.id },
-        update: { $set: { tags: item.tags } },
-      },
-    }));
+  // async updateManyTags(
+  //   updates: { id: string; tags: string[] }[],
+  //   onProgress?: (count: number) => void,
+  // ): Promise<number> {
+  //   let updatedCount = 0;
 
-    const result = await this.photoModel.bulkWrite(bulkOps);
-    return result.modifiedCount ?? 0;
+  //   for (const [, item] of updates.entries()) {
+  //     const result = await this.photoModel.updateOne(
+  //       { _id: item.id },
+  //       { $set: { tags: item.tags } },
+  //     );
+
+  //     if (result.modifiedCount > 0) {
+  //       updatedCount++;
+  //     }
+
+  //     // Emituj postęp
+  //     onProgress?.(updatedCount);
+  //   }
+
+  //   return updatedCount;
+  // }
+
+  async updateOne(id: string, tags: string[]) {
+    return this.photoModel.updateOne({ _id: id }, { $set: { tags } });
   }
 }

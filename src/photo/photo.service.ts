@@ -34,12 +34,14 @@ export class PhotoService {
   async updateTagsForPhotos(
     updates: { id: string; tags: string[] }[],
   ): Promise<number> {
-    return sendWithTimeout<number>(
+    const result = await sendWithTimeout<number>(
       this.client,
       { cmd: 'update-tags' },
       updates,
       'number',
     );
+
+    return result;
   }
 
   async deletePhotos(ids: string[]): Promise<number> {
