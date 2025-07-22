@@ -1,11 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 import { RepositoryService } from 'src/repository/repository.service';
 import { Photo as PhotoEntity } from '../graphql/photo.entity';
 import { TagFilterInput } from '../graphql/tag-filter.input';
 import { PhotoDocument } from '../repository/photo.schema';
+import { sendWithTimeout } from './broker.helper';
 @Injectable()
 export class PhotoService {
-  constructor(private readonly repository: RepositoryService) {}
+  constructor(
+    @Inject('TEST_SERVICE')
+    private readonly client: ClientProxy,
+    private readonly repository: RepositoryService,
+  ) {}
 
   async filterPhotos(
     userId: string,
@@ -25,13 +31,23 @@ export class PhotoService {
     };
   }
 
-  async deletePhotos(ids: string[]): Promise<number> {
-    return this.repository.deleteManyByIds(ids);
-  }
-
   async updateTagsForPhotos(
     updates: { id: string; tags: string[] }[],
   ): Promise<number> {
-    return this.repository.updateManyTags(updates);
+    return sendWithTimeout<number>(
+      this.client,
+      { cmd: 'update-tags' },
+      updates,
+      'number',
+    );
+  }
+
+  async deletePhotos(ids: string[]): Promise<number> {
+    return sendWithTimeout<number>(
+      this.client,
+      { cmd: 'delete-photos' },
+      ids,
+      'number',
+    );
   }
 }
