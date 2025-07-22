@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Photo, PhotoDocument } from './photo.schema';
 import { TagFilterInput } from 'src/graphql/tag-filter.input';
-import { NotFoundException } from '@nestjs/common';
+import { Photo, PhotoDocument } from './photo.schema';
 
 @Injectable()
 export class RepositoryService {
@@ -42,9 +41,13 @@ export class RepositoryService {
   }
 
   // usuwa wiele rekordów na raz
-  async deleteManyByIds(ids: string[]): Promise<number> {
-    const result = await this.photoModel.deleteMany({ _id: { $in: ids } });
-    return result.deletedCount ?? 0;
+  // async deleteManyByIds(ids: string[]): Promise<number> {
+  //   const result = await this.photoModel.deleteMany({ _id: { $in: ids } });
+  //   return result.deletedCount ?? 0;
+  // }
+
+  async deleteOneById(id: string): Promise<{ deletedCount: number }> {
+    return this.photoModel.deleteOne({ _id: id });
   }
 
   // aktualizuje tagi w wielu rekordach
