@@ -25,10 +25,23 @@ export class PhotoService {
   private toGraphQL(photo: PhotoDocument): PhotoEntity {
     return {
       id: String(photo._id),
-      url: photo.url,
+      key: photo.key,
       userId: photo.userId,
       tags: photo.tags,
     };
+  }
+
+  async uploadPhotos(
+    photos: { userId: string; buffer: Buffer }[],
+  ): Promise<number> {
+    const result = await sendWithTimeout<number>(
+      this.client,
+      { cmd: 'upload-photos' },
+      photos,
+      'number',
+    );
+
+    return result;
   }
 
   async updateTagsForPhotos(

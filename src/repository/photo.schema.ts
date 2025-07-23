@@ -5,8 +5,8 @@ export type PhotoDocument = Photo & Document;
 
 @Schema()
 export class Photo {
-  @Prop({ required: true })
-  url: string;
+  @Prop({ required: true, unique: true, index: true })
+  key: string;
 
   @Prop({ required: true })
   userId: string;

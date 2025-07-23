@@ -10,6 +10,13 @@ export class PhotoGateway {
   @WebSocketServer()
   server: Server;
 
+  sendUploadLog(count: number) {
+    this.server.emit('photosUpdated', {
+      message: `Dodano ${count} zdjęć`,
+      count,
+    });
+  }
+
   sendUpdateLog(count: number) {
     this.server.emit('photosUpdated', {
       message: `Zaktualizowano ${count} zdjęć`,

@@ -6,7 +6,7 @@ export class Photo {
   id: string;
 
   @Field()
-  url: string;
+  key: string;
 
   @Field()
   userId: string;

@@ -45,6 +45,18 @@ export class RepositoryService {
   //   const result = await this.photoModel.deleteMany({ _id: { $in: ids } });
   //   return result.deletedCount ?? 0;
   // }
+  async savePhoto(data: {
+    key: string;
+    userId: string;
+    tags?: string[];
+  }): Promise<Photo> {
+    const createdPhoto = new this.photoModel({
+      key: data.key,
+      userId: data.userId,
+      tags: data.tags || [],
+    });
+    return createdPhoto.save();
+  }
 
   async deleteOneById(id: string): Promise<{ deletedCount: number }> {
     return this.photoModel.deleteOne({ _id: id });
