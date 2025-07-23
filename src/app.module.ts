@@ -8,9 +8,11 @@ import { PhotoModule } from './photo/photo.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GraphqlModule } from './graphql/graphql.module';
 import { RepositoryModule } from './repository/repository.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql'),

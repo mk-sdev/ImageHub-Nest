@@ -4,6 +4,7 @@ import { PhotoService } from './photo.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { PhotoController } from './photo.controller';
 import { PhotoGateway } from './photo.gateway';
+import { R2Service } from './R2.service';
 
 @Module({
   imports: [
@@ -20,8 +21,8 @@ import { PhotoGateway } from './photo.gateway';
       },
     ]),
   ],
-  providers: [PhotoService, PhotoGateway],
-  exports: [PhotoService, PhotoGateway],
+  providers: [PhotoService, PhotoGateway, R2Service],
+  exports: [PhotoService, PhotoGateway, R2Service],
   controllers: [PhotoController],
 })
 export class PhotoModule {}

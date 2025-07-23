@@ -2,12 +2,14 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { RepositoryService } from 'src/repository/repository.service';
 import { PhotoGateway } from './photo.gateway';
+import { R2Service } from './R2.service';
 
 @Controller('photo') //* RabbitMQ consumers
 export class PhotoController {
   constructor(
     private readonly repository: RepositoryService,
     private readonly photoGateway: PhotoGateway,
+    private readonly R2service: R2Service,
   ) {}
 
   @MessagePattern({ cmd: 'update-tags' })
@@ -34,6 +36,7 @@ export class PhotoController {
 
     for (const id of ids) {
       const result = await this.repository.deleteOneById(id);
+      await this.R2service.deleteObject('images', id);
       if (result.deletedCount > 0) {
         deletedCount++;
         this.photoGateway.sendDeleteLog(deletedCount);
