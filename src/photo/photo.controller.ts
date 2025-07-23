@@ -1,4 +1,12 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { RepositoryService } from 'src/repository/repository.service';
 import { PhotoGateway } from './photo.gateway';
@@ -7,6 +15,7 @@ import { R2Service } from './R2.service';
 import * as path from 'path';
 import * as fs from 'fs';
 import { randomUUID } from 'crypto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('photo') //* RabbitMQ consumers
 export class PhotoController {
@@ -16,6 +25,19 @@ export class PhotoController {
     private readonly R2service: R2Service,
     private readonly photoService: PhotoService,
   ) {}
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('userId') userId: string,
+  ) {
+    const buffer = file.buffer;
+
+    await this.photoService.uploadPhotos([{ userId, buffer }]);
+
+    return { message: 'Upload zakończony' };
+  }
 
   @Get('delete/:key')
   async testDelete(@Param('key') key: string) {

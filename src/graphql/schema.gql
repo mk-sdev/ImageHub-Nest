@@ -21,7 +21,7 @@ input TagFilterInput {
 }
 
 type Mutation {
-  deletePhotos(ids: [String!]!): Int!
+  deletePhotos(keys: [String!]!): Int!
   updateTagsForPhotos(input: [UpdatePhotoTagsInput!]!): Int!
 }
 

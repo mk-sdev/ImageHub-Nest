@@ -18,7 +18,7 @@ export class GraphqlResolver {
 
   @Mutation(() => Int)
   async deletePhotos(
-    @Args({ name: 'ids', type: () => [String] }) ids: string[],
+    @Args({ name: 'keys', type: () => [String] }) ids: string[],
   ): Promise<number> {
     return this.photoService.deletePhotos(ids);
   }
