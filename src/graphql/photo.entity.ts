@@ -9,6 +9,9 @@ export class Photo {
   url: string;
 
   @Field()
+  key: string;
+
+  @Field()
   userId: string;
 
   @Field(() => [String])

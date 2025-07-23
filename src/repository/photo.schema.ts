@@ -9,6 +9,9 @@ export class Photo {
   url: string;
 
   @Prop({ required: true })
+  key: string;
+
+  @Prop({ required: true })
   userId: string;
 
   @Prop({ type: [String], default: [] })

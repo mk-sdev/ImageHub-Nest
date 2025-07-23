@@ -5,6 +5,7 @@
 type Photo {
   id: ID!
   url: String!
+  key: String!
   userId: String!
   tags: [String!]!
 }

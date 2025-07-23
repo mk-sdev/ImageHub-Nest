@@ -3,8 +3,9 @@ import { MessagePattern } from '@nestjs/microservices';
 import { RepositoryService } from 'src/repository/repository.service';
 import { PhotoGateway } from './photo.gateway';
 import { R2Service } from './R2.service';
-import path from 'path';
+import * as path from 'path';
 import * as fs from 'fs';
+import { randomUUID } from 'crypto';
 
 @Controller('photo') //* RabbitMQ consumers
 export class PhotoController {
@@ -35,6 +36,37 @@ export class PhotoController {
       message: 'Upload zakończony',
       id: result.key,
       url: result.url,
+    };
+  }
+
+  @MessagePattern({ cmd: 'upload-photos' })
+  async handleUploadPhotos(photos: { userId: string; buffer: Buffer }[]) {
+    // const { userId, files } = payload;
+
+    const uploaded: { key: string; url: string }[] = [];
+
+    for (const photo of photos) {
+      const key = randomUUID();
+
+      const result = await this.R2service.uploadToR2({
+        bucket: 'images',
+        key,
+        body: photo.buffer,
+      });
+
+      await this.repository.savePhoto({
+        key: result.key,
+        url: result.url,
+        userId: photo.userId,
+        tags: [],
+      });
+
+      uploaded.push({ key: result.key, url: result.url });
+    }
+
+    return {
+      message: `${uploaded.length} files uploaded and saved.`,
+      files: uploaded,
     };
   }
 
