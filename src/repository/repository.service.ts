@@ -46,13 +46,11 @@ export class RepositoryService {
   //   return result.deletedCount ?? 0;
   // }
   async savePhoto(data: {
-    url: string;
     key: string;
     userId: string;
     tags?: string[];
   }): Promise<Photo> {
     const createdPhoto = new this.photoModel({
-      url: data.url,
       key: data.key,
       userId: data.userId,
       tags: data.tags || [],
