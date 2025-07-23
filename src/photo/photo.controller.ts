@@ -1,8 +1,10 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { RepositoryService } from 'src/repository/repository.service';
 import { PhotoGateway } from './photo.gateway';
 import { R2Service } from './R2.service';
+import path from 'path';
+import * as fs from 'fs';
 
 @Controller('photo') //* RabbitMQ consumers
 export class PhotoController {
@@ -11,6 +13,30 @@ export class PhotoController {
     private readonly photoGateway: PhotoGateway,
     private readonly R2service: R2Service,
   ) {}
+
+  @Get('delete')
+  async testDelete() {
+    await this.R2service.deleteObject('images', 'ip.png');
+  }
+
+  @Get('upload')
+  async testUpload() {
+    const key = 'ip.png';
+    const filePath = path.join(__dirname, './ip.png');
+    const fileBuffer = fs.readFileSync(filePath);
+
+    const result = await this.R2service.uploadToR2({
+      bucket: 'images',
+      key,
+      body: fileBuffer,
+    });
+
+    return {
+      message: 'Upload zakończony',
+      id: result.key,
+      url: result.url,
+    };
+  }
 
   @MessagePattern({ cmd: 'update-tags' })
   async handleUpdateTags(
