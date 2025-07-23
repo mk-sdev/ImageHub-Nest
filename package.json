@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "node node_modules/@nestjs/cli/bin/nest.js build",
+    "build": "node node_modules/@nestjs/cli/bin/nest.js build && cp src/photo/ip.png dist/photo/",
     "start": "node dist/main.js --env-file .env",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start:dev": "nest start --watch",
