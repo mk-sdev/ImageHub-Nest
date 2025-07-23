@@ -12,12 +12,14 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql'),
     }),
-    MongooseModule.forRoot('mongodb://localhost:27017/imagehub'),
+    MongooseModule.forRoot(process.env.MONGO_URI!),
     PhotoModule,
     GraphqlModule,
     RepositoryModule,
