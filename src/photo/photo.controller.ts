@@ -3,7 +3,7 @@ import { MessagePattern } from '@nestjs/microservices';
 import { RepositoryService } from 'src/repository/repository.service';
 import { PhotoGateway } from './photo.gateway';
 import { R2Service } from './R2.service';
-import path from 'path';
+import * as path from 'path';
 import * as fs from 'fs';
 
 @Controller('photo') //* RabbitMQ consumers
