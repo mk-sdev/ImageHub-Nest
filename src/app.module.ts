@@ -19,7 +19,7 @@ import { ConfigModule } from '@nestjs/config';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql'),
     }),
-    MongooseModule.forRoot('mongodb://localhost:27017/imagehub'),
+    MongooseModule.forRoot(process.env.MONGO_URI!),
     PhotoModule,
     GraphqlModule,
     RepositoryModule,
