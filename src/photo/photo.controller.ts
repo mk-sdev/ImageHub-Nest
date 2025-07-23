@@ -17,61 +17,73 @@ export class PhotoController {
     private readonly photoService: PhotoService,
   ) {}
 
-  @Get('delete')
-  async testDelete(@Param(':key') key: string) {
-    // await this.R2service.deleteObject('images', 'ip.png');
-    await this.photoService.deletePhotos([key])
+  @Get('delete/:key')
+  async testDelete(@Param('key') key: string) {
+    try {
+      const result = await this.photoService.deletePhotos([key]);
+      return { deleted: result };
+    } catch (error) {
+      console.error('❌ Błąd przy usuwaniu zdjęcia:', error);
+      throw error; // Można też zwrócić { error: error.message }
+    }
   }
 
   @Get('upload')
   async testUpload() {
-    // const key = 'ip.png';
+    const key = 'ip.png';
     const filePath = path.join(__dirname, './ip.png');
     const fileBuffer = fs.readFileSync(filePath);
+    await this.photoService.uploadPhotos([
+      { userId: '123', buffer: fileBuffer },
+    ]);
 
-    await this.photoService.uploadPhotos([{userId: '123', buffer: fileBuffer}])
+    const result = await this.R2service.uploadToR2({
+      bucket: 'images',
+      key,
+      body: fileBuffer,
+    });
 
-    // const result = await this.R2service.uploadToR2({
-    //   bucket: 'images',
-    //   key,
-    //   body: fileBuffer,
-    // });
-
-    // return {
-    //   message: 'Upload zakończony',
-    //   id: result.key,
-    //   url: result.url,
-    // };
+    return {
+      message: 'Upload zakończony',
+      id: result.key,
+      url: result.url,
+    };
   }
 
   @MessagePattern({ cmd: 'upload-photos' })
-  async handleUploadPhotos(photos: { userId: string; buffer: Buffer }[]) {
-
+  async handleUploadPhotos(photos: { userId: string; buffer: string }[]) {
     const uploaded: string[] = [];
 
-    for (const file of photos) {
-      const key = randomUUID();
+    try {
+      for (const file of photos) {
+        const buffer = Buffer.from(file.buffer, 'base64'); // deserializacja
 
-      const result = await this.R2service.uploadToR2({
-        bucket: 'images',
-        key,
-        body: file.buffer,
-      });
+        const key = randomUUID();
 
-      await this.repository.savePhoto({
-        key: result.key,
-        userId: file.userId,
-        tags: [],
-      });
+        const result = await this.R2service.uploadToR2({
+          bucket: 'images',
+          key,
+          body: buffer,
+        });
 
-      this.photoGateway.sendUploadLog(1);
-      uploaded.push(result.key);
+        await this.repository.savePhoto({
+          key: result.key,
+          userId: file.userId,
+          tags: [],
+        });
+
+        this.photoGateway.sendUploadLog(1);
+        uploaded.push(result.key);
+      }
+
+      return {
+        message: `${uploaded.length} files uploaded and saved.`,
+        files: uploaded,
+      };
+    } catch (err) {
+      console.error('❌ Błąd podczas uploadu zdjęcia:', err);
+      throw err;
     }
-
-    return {
-      message: `${uploaded.length} files uploaded and saved.`,
-      files: uploaded,
-    };
   }
 
   @MessagePattern({ cmd: 'update-tags' })
@@ -93,15 +105,22 @@ export class PhotoController {
   }
 
   @MessagePattern({ cmd: 'delete-photos' })
-  async handleDeletePhotos(ids: string[]): Promise<number> {
+  async handleDeletePhotos(keys: string[]): Promise<number> {
     let deletedCount = 0;
 
-    for (const id of ids) {
-      const result = await this.repository.deleteOneById(id);
-      await this.R2service.deleteObject('images', id);
-      if (result.deletedCount > 0) {
-        deletedCount++;
-        this.photoGateway.sendDeleteLog(deletedCount);
+    for (const key of keys) {
+      try {
+        const result = await this.repository.deleteOneByKey(key);
+
+        await this.R2service.deleteObject('images', key);
+
+        if (result?.deletedCount > 0) {
+          deletedCount++;
+          this.photoGateway.sendDeleteLog(deletedCount);
+        }
+      } catch (err) {
+        console.error(`❌ Błąd przy usuwaniu ${key}:`, err); // <=== TO NAS INTERESUJE
+        throw err; // pozwala zwrócić błąd do `sendWithTimeout`
       }
     }
 

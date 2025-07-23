@@ -34,11 +34,15 @@ export class PhotoService {
   async uploadPhotos(
     photos: { userId: string; buffer: Buffer }[],
   ): Promise<number> {
+    const serializedPhotos = photos.map((photo) => ({
+      userId: photo.userId,
+      buffer: photo.buffer.toString('base64'),
+    }));
     const result = await sendWithTimeout<number>(
       this.client,
       { cmd: 'upload-photos' },
-      photos,
-      'number',
+      serializedPhotos,
+      'object',
     );
 
     return result;
@@ -57,11 +61,11 @@ export class PhotoService {
     return result;
   }
 
-  async deletePhotos(ids: string[]): Promise<number> {
+  async deletePhotos(keys: string[]): Promise<number> {
     return sendWithTimeout<number>(
       this.client,
       { cmd: 'delete-photos' },
-      ids,
+      keys,
       'number',
     );
   }

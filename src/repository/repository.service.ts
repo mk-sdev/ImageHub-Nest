@@ -58,8 +58,8 @@ export class RepositoryService {
     return createdPhoto.save();
   }
 
-  async deleteOneById(id: string): Promise<{ deletedCount: number }> {
-    return this.photoModel.deleteOne({ _id: id });
+  async deleteOneByKey(key: string): Promise<{ deletedCount: number }> {
+    return this.photoModel.deleteOne({ key });
   }
 
   // aktualizuje tagi w wielu rekordach
