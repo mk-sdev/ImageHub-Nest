@@ -14,7 +14,7 @@ import { R2Service } from './R2.service';
         name: 'TEST_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: ['amqp://localhost:5672'],
+          urls: [process.env.AMQP_URL!],
           queue: 'test_queue',
           queueOptions: { durable: false },
         },
