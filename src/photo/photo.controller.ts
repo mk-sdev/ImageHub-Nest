@@ -80,7 +80,7 @@ export class PhotoController {
       for (const file of photos) {
         const buffer = Buffer.from(file.buffer, 'base64'); // deserializacja
 
-        const key = randomUUID();
+        const key = file.userId + '/' + randomUUID();
 
         const result = await this.R2service.uploadToR2({
           bucket: 'images',
