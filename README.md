@@ -1,3 +1,45 @@
+#### A scalable, tag-based photo gallery service powered by **Cloudflare R2**, designed for high-performance media storage, filtering, and flexible search.
+
+## ✨ Features  
+✅ Cloudflare R2 file storage
+- Store and serve images efficiently using an S3-compatible, low-latency object storage.
+
+✅ Tag-Based organization
+- Assign custom tags to images and easily retrieve them via tag-based search and filtering.
+
+✅ Advanced filtering options
+- Perform complex, nested queries to find images with exact tags you want.
+
+✅ Scalability
+- RabbitMQ processes tasks in the background and keeps the app fast, even under heavy load.  
+
+✅ Real-time Upload Progress
+- WebSocket support allows clients to receive live updates on image upload status and processing steps.
+
+## 🛠 Tech Stack  
+- **Node.js**
+- **TypeScript**
+- **NestJS**  
+- **GraphQL**   
+- **RabbitMQ**
+- **Cloudflare R2**  
+- **Mongo db + mongoose**
+
+### .env file structure:
+
+```
+R2_ENDPOINT=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BASE_URL=
+
+AMQP_URL=
+MONGO_URI=
+
+JWT_ACCESS_SECRET=
+
+```
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -56,43 +98,3 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
