@@ -10,7 +10,7 @@ type Photo {
 }
 
 type Query {
-  photos(userId: String!, filter: TagFilterInput): [Photo!]!
+  photos(filter: TagFilterInput): [Photo!]!
 }
 
 input TagFilterInput {

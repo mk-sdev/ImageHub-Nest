@@ -9,6 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { GraphqlModule } from './graphql/graphql.module';
 import { RepositoryModule } from './repository/repository.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { ConfigModule } from '@nestjs/config';
     PhotoModule,
     GraphqlModule,
     RepositoryModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

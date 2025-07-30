@@ -5,9 +5,11 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { PhotoController } from './photo.controller';
 import { PhotoGateway } from './photo.gateway';
 import { R2Service } from './R2.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     RepositoryModule,
     ClientsModule.register([
       {

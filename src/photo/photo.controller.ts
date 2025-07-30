@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
@@ -16,6 +17,8 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { randomUUID } from 'crypto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { Id } from 'src/id.decorator';
 
 @Controller('photo') //* RabbitMQ consumers
 export class PhotoController {
@@ -27,10 +30,11 @@ export class PhotoController {
   ) {}
 
   @Post('upload')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
-    @Body('userId') userId: string,
+    @Id() userId: string,
   ) {
     const buffer = file.buffer;
 
